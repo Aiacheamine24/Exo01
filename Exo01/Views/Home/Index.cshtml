@@ -1,0 +1,250 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #f4f4f4;
+            padding: 10px;
+            text-align: center;
+        }
+
+            nav a {
+                margin-right: 15px;
+                text-decoration: none;
+                color: #333;
+                font-weight: bold;
+                transition: color 0.3s;
+            }
+
+                nav a:hover {
+                    color: #ffc107;
+                }
+
+        section {
+            padding: 15px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #333;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 10px auto;
+            padding: 15px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="submit"],
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #333;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+            input[type="submit"]:hover {
+                background-color: #555;
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            height: 50px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        #filters {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+            #filters div {
+                flex: 1;
+                margin-right: 10px;
+            }
+
+            #filters select {
+                width: 100%;
+                padding: 8px;
+                box-sizing: border-box;
+            }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .delete-button,
+        .update-button {
+            width: 100%;
+            padding: 8px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .delete-button {
+            background-color: orangered;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .update-button {
+            background-color: lawngreen;
+            color: #fff;
+        }
+
+        .delete-button:hover {
+            background-color: #FF5733;
+        }
+
+        .update-button:hover {
+            background-color: #5EFF80; 
+        }
+
+        td div {
+            display: flex;
+            flex-direction: row;
+        }
+
+        td div form {
+            margin:0;
+            padding:0;
+        }
+    </style>
+
+</head>
+<body>
+
+    <nav>
+        <a href="#">Home</a>
+        <a href="~/Home/AddEquipment">Add Equipment</a>
+    </nav>
+    <header>
+        <h1>Inventory Management System</h1>
+    </header>
+
+    <section>
+        <h2>Equipment List</h2>
+        <form method="get" action="~/Home/Index">
+            <div id="filters">
+                <div>
+                    <label>Name: </label>
+                    <input type="text" name="namefilter" placeholder="Add filter" />
+                </div>
+                <div>
+                    <label>Type: </label>
+                    <select name="typefilter">
+                        <option value="Choisir">Choisir</option>
+                        <option value="bricolage">Bricolage</option>
+                        <option value="informatique">Informatique</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Price: </label>
+                    <input type="number" name="fromPrice" placeholder="From" />
+                    <input type="number" name="toPrice" placeholder="To" />
+                </div>
+                <div>
+                    <input type="submit" value="Filtrer" />
+                </div>
+            </div>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>No. of Series</th>
+                    <th>Nom</th>
+                    <th>Type</th>
+                    <th>Prix</th>
+                    <th>Description</th>
+                    <th>Delete - Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var equipement in Model)
+                {
+                    <tr>
+                        <td>@equipement.SN</td>
+                        <td>@equipement.Nom</td>
+                        <td>@equipement.Type</td>
+                        <td>@equipement.Prix</td>
+                        <td>@equipement.Description</td>
+                        <td>
+                            <div class="button-container">
+                                <form method="post" action="~/Home/DeleteEquipment?sn=@equipement.SN">
+                                    <input type="submit" class="delete-button" value="Delete">
+                                </form>
+                                <form method="get" action="~/Home/ModifyEquipment">
+                                    <input type="hidden" name="sn" value="@equipement.SN" />
+                                    <input type="submit" class="update-button" value="Update">
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <h3 style="color:red">
+            @ViewBag.Error
+        </h3>
+    </section>
+
+</body>
+</html>
